@@ -1,0 +1,21 @@
+.item{
+    width: 100%;
+    height: 100%;
+    background-color: rgb(222, 222, 222);
+}
+
+.not-walkable {
+    background-color: black !important;
+}
+
+.blue{
+    background-color: blue;
+}
+
+.open{
+    background-color: green !important;
+}
+
+.close {
+    background-color: red !important;
+}

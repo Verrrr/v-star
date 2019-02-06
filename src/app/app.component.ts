@@ -73,29 +73,54 @@ export class AppComponent {
     start.open = true;
     start.fCost = 0;
     let current: Node;
+    open.push(end);
+    open.push(mapCoords[2][8]) 
 
     while(true){
+      current = this.getLowFcost(open);
+      open = open.filter(node=> {return current!=node})
+      close.push(current);
       
-      let current: Node = open[0];
       for (let i = 0; i < open.length; i++) {
         if(current.fCost < open[i].fCost)
           current == open[i];
       }
 
       if(current == end) break;
-
+      
       current.neighbors.forEach(neighbor => {
         if(close.includes(neighbor)) return;
 
+        // let oldPath = neighbor.getFcost(end);
+        let tempParent = neighbor.parent;
+        neighbor.parent = current;
+        let newPath = neighbor.getFcost(end);
+        neighbor.parent = tempParent;
+        if(newPath<neighbor.fCost || !open.includes(neighbor)){
+          neighbor.parent = current;
+          neighbor.fCost = neighbor.getFcost(end);
+          if(!open.includes(neighbor)){
+            open.push(neighbor);
+          }
+        }
+
       });
       
-      return;
+      // return;
     }
+
+    console.log(current.getPath([current]));
+
 
   }
 
   getDistance(start: Node, end: Node){
     return Math.sqrt(((start.x - end.x)*(start.x - end.x))+((start.y - end.y)*(start.y - end.y)));
+  }
+
+  getLowFcost(openList:Node[]):Node{
+    openList.sort((a, b) => {return a.fCost - b.fCost});
+    return openList[0]; 
   }
 
 

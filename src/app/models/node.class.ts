@@ -18,5 +18,32 @@ export class Node{
         this.y = y;
         this.walkable = true;
         this.neighbors = new Array();
+        this.fCost = 0;
+        this.gCost = 0;
+    }
+
+    getGcost(): number{
+        if(!!!this.parent)
+            return 0;
+
+        this.gCost = this.getDistance(this,this.parent);
+        return this.gCost + this.parent.getGcost();
+    }
+
+    getFcost(end: Node): number{
+        this.hCost = this.getDistance(this, end);
+        return this.getGcost() + this.hCost;
+    }
+
+    getDistance(start: Node, end: Node) : number{
+        return Math.sqrt(((start.x - end.x)*(start.x - end.x))+((start.y - end.y)*(start.y - end.y)));
+    }
+
+    getPath(path: Node[]): Node[]{
+        if(!!!this.parent){
+            return path;
+        }
+        path.push(this.parent);
+        return path.push(this.parent.getPath(path));
     }
 }

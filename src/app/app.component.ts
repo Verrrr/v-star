@@ -23,10 +23,10 @@ export class AppComponent {
 
     let grid = [
       [1,1,1,1,1,1,1,1,1,1,1],
-      [1,0,1,1,1,1,1,1,1,0,1],
-      [1,0,0,0,0,0,0,0,0,0,1],
-      [1,0,1,1,1,1,1,1,1,0,1],
-      [1,0,1,1,1,1,1,1,1,0,1],
+      [1,1,1,1,1,1,1,1,1,1,1],
+      [1,1,1,0,0,0,0,0,1,1,1],
+      [1,1,1,1,1,1,1,1,1,1,1],
+      [1,1,1,1,1,1,1,1,1,1,1],
       [1,1,1,1,1,1,1,1,1,1,1],
     ];
 
@@ -43,10 +43,11 @@ export class AppComponent {
     }
     console.log("Map initialize");
 
-    mapCoords[5][5].start = true;
-    mapCoords[0][5].end = true;
     let start: Node = mapCoords[5][5];
     let end: Node = mapCoords[0][5];
+
+    start.start = true;
+    end.end = true;
 
     // Initialize Neighbor
     for (let i = 0; i < grid.length; i++) {

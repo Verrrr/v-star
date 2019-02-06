@@ -9,13 +9,13 @@
 }
 
 .blue{
-    background-color: blue;
+    background-color: blue !important;
 }
 
 .open{
-    background-color: green !important;
+    background-color: green;
 }
 
 .close {
-    background-color: red !important;
+    background-color: red;
 }

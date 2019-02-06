@@ -11,6 +11,10 @@ export class AppComponent {
   obstacles:Node[];
 
   constructor() {
+    this.solve();
+  }
+
+  async solve(){
     let x = 11;
     let y = 6;
     this.map = new Array();
@@ -66,12 +70,11 @@ export class AppComponent {
     console.log("Neighbor initialized");
 
     //a*
-
     let open: Node[] = new Array();
     let close: Node[] = new Array();
     open.push(start);
     start.open = true;
-    start.fCost = 0;
+    start.fCost = start.getFcost(end);
     let current: Node;
 
     while(true){
@@ -101,11 +104,19 @@ export class AppComponent {
         }
 
       });
+
+      this.updateUI(open, close);
+      await this.delay();
     }
 
-    console.log(current.getPath());
-
-
+    let path: Node[] = end.getPath();
+    path.reverse();
+    for (let i = 0; i < path.length; i++) {
+      let node = path[i];
+      node.start = true;
+      await this.delay();
+    }
+    
   }
 
   getDistance(start: Node, end: Node){
@@ -117,6 +128,20 @@ export class AppComponent {
     return openList[0]; 
   }
 
+  updateUI(open: Node[], close: Node[]){
+    open.forEach(node => {
+      node.open = true;
+    });
 
+    close.forEach(node => {
+      node.close = true;
+      node.open = false;
+    });
+  }
 
+  delay(){
+    return new Promise((resolve, reject)=> {
+      setTimeout(resolve, 1000);
+    });
+  }
 }

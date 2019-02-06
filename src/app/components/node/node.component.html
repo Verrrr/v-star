@@ -1,3 +1,6 @@
-<div class="item" [ngClass]="{'not-walkable': !node.walkable, 'blue': node.start||node.end}" >
+<div class="item" [ngClass]="{'not-walkable': !node.walkable, 
+'blue': node.start||node.end, 
+'open': node.open, 
+'close': node.close}" >
   
 </div>

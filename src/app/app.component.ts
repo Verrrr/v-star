@@ -123,7 +123,13 @@ export class AppComponent {
   }
 
   getLowFcost(openList:Node[]):Node{
-    openList = openList.sort((a, b) => {return a.fCost - b.fCost});
+    openList = openList.sort((a, b) => {
+      var n = a.fCost - b.fCost;
+      if(n !== 0){
+        return n;
+      }
+      return a.hCost - b.hCost;
+    });
     return openList[0]; 
   }
 

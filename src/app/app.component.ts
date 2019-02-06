@@ -73,8 +73,6 @@ export class AppComponent {
     start.open = true;
     start.fCost = 0;
     let current: Node;
-    open.push(end);
-    open.push(mapCoords[2][8]) 
 
     while(true){
       current = this.getLowFcost(open);
@@ -90,8 +88,6 @@ export class AppComponent {
       
       current.neighbors.forEach(neighbor => {
         if(close.includes(neighbor)) return;
-
-        // let oldPath = neighbor.getFcost(end);
         let tempParent = neighbor.parent;
         neighbor.parent = current;
         let newPath = neighbor.getFcost(end);
@@ -105,11 +101,9 @@ export class AppComponent {
         }
 
       });
-      
-      // return;
     }
 
-    console.log(current.getPath([current]));
+    console.log(current.getPath());
 
 
   }
@@ -119,7 +113,7 @@ export class AppComponent {
   }
 
   getLowFcost(openList:Node[]):Node{
-    openList.sort((a, b) => {return a.fCost - b.fCost});
+    openList = openList.sort((a, b) => {return a.fCost - b.fCost});
     return openList[0]; 
   }
 

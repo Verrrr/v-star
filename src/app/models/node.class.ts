@@ -39,11 +39,11 @@ export class Node{
         return Math.sqrt(((start.x - end.x)*(start.x - end.x))+((start.y - end.y)*(start.y - end.y)));
     }
 
-    getPath(path: Node[]): Node[]{
+    getPath(path: Node[]= []): Node[]{
+        path.push(this);
         if(!!!this.parent){
             return path;
         }
-        path.push(this.parent);
-        return path.push(this.parent.getPath(path));
+        return this.parent.getPath(path);
     }
 }

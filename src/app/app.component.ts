@@ -43,7 +43,7 @@ export class AppComponent {
     }
     console.log("Map initialize");
 
-    mapCoords[3][7].start = true;
+    mapCoords[4][7].start = true;
     mapCoords[1][4].end = true;
     let start: Node = mapCoords[3][7];
     let end: Node = mapCoords[1][4];
@@ -114,7 +114,6 @@ export class AppComponent {
     for (let i = 0; i < path.length; i++) {
       let node = path[i];
       node.start = true;
-      await this.delay();
     }
     
   }

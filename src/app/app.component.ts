@@ -142,6 +142,17 @@ export class AppComponent {
     return openList[0]; 
   }
 
+  getLowHcost(openList:Node[]):Node{
+    openList = openList.sort((a, b) => {
+      var n = a.hCost - b.hCost;
+      if(n !== 0){
+        return n;
+      }
+      return a.fCost - b.fCost;
+    });
+    return openList[0]; 
+  }
+
   updateUI(open: Node[], close: Node[]){
     open.forEach(node => {
       node.open = true;
@@ -155,7 +166,7 @@ export class AppComponent {
 
   delay(){
     return new Promise((resolve, reject)=> {
-      setTimeout(resolve, 500);
+      setTimeout(resolve, 250);
     });
   }
 }

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Node } from './models/node.class';
+import { Mode } from './models/mode.enum';
 
 @Component({
   selector: 'app-root',
@@ -9,57 +10,64 @@ import { Node } from './models/node.class';
 export class AppComponent {
   map: Node[];
   obstacles:Node[];
+  start: Node;
+  end: Node;
+  mode: any = Mode.none;
+
+  grid;
+  gridx: number;
+  gridy: number;
 
   constructor() {
-    this.solve();
+
+  }
+
+  createGrid(x: number, y: number){
+    this.map = new Array();
+    this.gridx = x;
+    this.gridy = y;
+    this.grid = new Array();
+    for (let i = 0; i < x; i++) {
+      this.grid[i] = new Array();
+      for (let j = 0; j < y; j++) {
+        let node = new Node(i,j);
+        node.walkable = true;
+        this.grid[i][j] = node;
+        this.map.push(node);        
+      }
+    }
+  }
+
+  onClick(node: Node){
+    if(this.mode == Mode.obstacle){
+      node.walkable = false;
+    } else if (this.mode == Mode.start){
+      this.start = node;
+      node.start = true;
+      this.mode = Mode.none;
+    } else if (this.mode == Mode.end){
+      this.end = node;
+      node.end = true;
+      this.mode = Mode.none;
+    }
   }
 
   async solve(){
     let x = 11;
     let y = 6;
-    this.map = new Array();
-    let mapCoords = new Array();
     this.obstacles = new Array();
 
-    let grid = [
-      [1,1,1,1,1,1,1,1,1,1,1],
-      [1,1,1,1,1,1,1,1,1,1,1],
-      [1,1,1,0,0,0,0,0,1,1,1],
-      [1,1,1,1,1,1,1,1,1,1,1],
-      [1,1,1,1,1,1,1,1,1,1,1],
-      [1,1,1,1,1,1,1,1,1,1,1],
-    ];
-
-
-    // Initialize Nodes to map
-    for (let i = 0; i < grid.length; i++) {
-      mapCoords[i] = new Array();
-      for (let j = 0; j < grid[i].length; j++) {
-        let node = new Node(i,j);
-        node.walkable = !!grid[i][j];
-        this.map.push(node);
-        mapCoords[i][j] =node;
-      } 
-    }
-    console.log("Map initialize");
-
-    let start: Node = mapCoords[5][5];
-    let end: Node = mapCoords[0][5];
-
-    start.start = true;
-    end.end = true;
-
     // Initialize Neighbor
-    for (let i = 0; i < grid.length; i++) {
-      for (let j = 0; j < grid[i].length; j++) {
-        let node: Node = mapCoords[i][j];
+    for (let i = 0; i < this.grid.length; i++) {
+      for (let j = 0; j < this.grid[i].length; j++) {
+        let node: Node = this.grid[i][j];
         for (let k = -1; k < 2; k++) {
           for (let l = -1; l < 2; l++) {
             if(node.x + k < 0 || node.y + l < 0) continue;
             if(k==0 && l==0) continue;
             try {
-              if(!!mapCoords[node.x + k][node.y + l] && mapCoords[node.x + k][node.y + l].walkable)
-                node.neighbors.push(mapCoords[node.x + k][node.y + l]);
+              if(!!this.grid[node.x + k][node.y + l] && this.grid[node.x + k][node.y + l].walkable)
+                node.neighbors.push(this.grid[node.x + k][node.y + l]);
             } catch (error) {
               continue;
             }
@@ -73,9 +81,9 @@ export class AppComponent {
     //a*
     let open: Node[] = new Array();
     let close: Node[] = new Array();
-    open.push(start);
-    start.open = true;
-    start.fCost = start.getFcost(end);
+    open.push(this.start);
+    this.start.open = true;
+    this.start.fCost = this.start.getFcost(this.end);
     let current: Node;
 
     while(true){
@@ -88,17 +96,17 @@ export class AppComponent {
           current == open[i];
       }
 
-      if(current == end) break;
+      if(current == this.end) break;
       
       current.neighbors.forEach(neighbor => {
         if(close.includes(neighbor)) return;
         let tempParent = neighbor.parent;
         neighbor.parent = current;
-        let newPath = neighbor.getFcost(end);
+        let newPath = neighbor.getFcost(this.end);
         neighbor.parent = tempParent;
         if(newPath<neighbor.fCost || !open.includes(neighbor)){
           neighbor.parent = current;
-          neighbor.fCost = neighbor.getFcost(end);
+          neighbor.fCost = neighbor.getFcost(this.end);
           if(!open.includes(neighbor)){
             open.push(neighbor);
           }
@@ -110,7 +118,7 @@ export class AppComponent {
       await this.delay();
     }
 
-    let path: Node[] = end.getPath();
+    let path: Node[] = this.end.getPath();
     path.reverse();
     for (let i = 0; i < path.length; i++) {
       let node = path[i];
@@ -147,7 +155,7 @@ export class AppComponent {
 
   delay(){
     return new Promise((resolve, reject)=> {
-      setTimeout(resolve, 1000);
+      setTimeout(resolve, 500);
     });
   }
 }

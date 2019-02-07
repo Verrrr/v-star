@@ -1,5 +1,22 @@
+<br>
+<label for="">Grid X</label>
+<input type="text" #x>
+<br>
+<label for="">Grid Y</label>
+<input type="text" #y>
+<br>
+<button (click)="createGrid(x.value,y.value)" >Create</button>
+<button [ngClass]="{'yellow': mode == 1}" (click)="mode=mode==1?0:1">Obstacle Mode</button>
+<button [ngClass]="{'yellow': mode == 2}" (click)="mode=2">Pick Start</button>
+<button [ngClass]="{'yellow': mode == 3}" (click)="mode=3">Pick End</button>
+<button (click)="solve()">Solve</button>
 
 <br>
-<div class="grid-container">
-  <app-node *ngFor="let n of map" [node]="n"></app-node>
+<div class="grid-container" [ngStyle]="{
+  'display' : 'grid',
+  'grid-template-columns': 'repeat('+gridy+', 50px)',
+  'grid-template-rows': 'repeat('+gridx+', 50px)',
+  'grid-gap': '2px'
+}">
+  <app-node *ngFor="let n of map" [node]="n" (click)="onClick(n)" ></app-node>
 </div>
